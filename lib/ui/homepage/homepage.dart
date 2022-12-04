@@ -46,8 +46,11 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text(user![index].name.toString()),
+                child: Card(
+                  child: ListTile(
+                    title: Text(user![index].name.toString()),
+                    subtitle: Text(user![index].email.toString()),
+                  ),
                 ),
               );
             },
