@@ -1,9 +1,11 @@
-
 import 'package:apiintegration/styled/themedata.dart';
 import 'package:apiintegration/ui/homepage/homepage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(const MyApp());
 }
 
