@@ -3,14 +3,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // ignore: prefer_const_constructors
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  "High Importance Notifications", // title
-description :'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
+// const AndroidNotificationChannel channel = AndroidNotificationChannel(
+//   'high_importance_channel', // id
+//   "High Importance Notifications", // title
+// description :'This channel is used for important notifications.', // description
+//   importance: Importance.high,
+// );
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessagingBackGroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -23,16 +23,16 @@ class FirebaseNotification {
     await Firebase.initializeApp();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackGroundHandler);
 
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+    // await flutterLocalNotificationsPlugin
+    //     .resolvePlatformSpecificImplementation<
+    //         AndroidFlutterLocalNotificationsPlugin>()
+    //     ?.createNotificationChannel(channel);
 
     var initiizationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
         InitializationSettings(android: initiizationSettingsAndroid);
-
+    Future<String?> token = FirebaseMessaging.instance.getToken();
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
@@ -43,20 +43,17 @@ class FirebaseNotification {
             notification.title,
             notification.body,
             NotificationDetails(
-                android: AndroidNotificationDetails(channel.id, channel.name,
-                    channelDescription: channel.description,
+                android: AndroidNotificationDetails(
+                    token.toString(), message.notification!.title!,
+                    channelDescription: message.notification!.body!,
                     icon: android.smallIcon)));
       }
     });
   }
 
   Future<String?> getToken() async {
-    Future<String?> token = FirebaseMessaging.instance.getToken() ;
+    Future<String?> token = FirebaseMessaging.instance.getToken();
     print(token);
     return token;
-  }
-
-  subscribetoTpic(String topic) async {
-    await FirebaseMessaging.instance.subscribeToTopic(topic);
   }
 }
